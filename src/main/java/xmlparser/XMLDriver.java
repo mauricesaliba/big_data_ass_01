@@ -7,23 +7,18 @@ import org.apache.hadoop.mapreduce.*;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
- 
+
+/* as adapted from tutorials on the internet on XMLInputFormat brought from
+ * Mahout. This did not support self closing tags.
+ */
+
 public class XMLDriver {
  
-    /** Krishna - for processing XML file using Hadoop MapReduce
-     * @param args
-     */
+
     public static void main(String[] args) {
         try {
  
             Configuration conf = new Configuration();
-            // conf.setInt(FixedLengthInputFormat.FIXED_RECORD_LENGTH, 2048);
- 
-            // OR alternatively you can set it this way, the name of the
-            // property is
-            // "mapreduce.input.fixedlengthinputformat.record.length"
-            // conf.setInt("mapreduce.input.fixedlengthinputformat.record.length",
-            // 2048);
             String[] arg = new GenericOptionsParser(conf, args).getRemainingArgs();
  
             conf.set("elementName", args[2]);
@@ -48,9 +43,7 @@ public class XMLDriver {
  
         } catch (Exception e) {
             System.out.println(e.getMessage().toString());
-        }
-        // job.setReducerClass(ClickReducer.class);
- 
+        } 
     }
  
 }
