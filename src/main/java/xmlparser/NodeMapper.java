@@ -20,7 +20,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
  
-public class MyMapper extends Mapper<LongWritable, Text, Text, NullWritable> {
+public class NodeMapper extends Mapper<LongWritable, Text, Text, NullWritable> {
 	
 	private static Logger logger = Logger.getLogger("XMLPARSER_01");
 	// example how to use: //logger.info("ELEMENT_>>>>>>>>>>>: " + id);
@@ -62,63 +62,50 @@ public class MyMapper extends Mapper<LongWritable, Text, Text, NullWritable> {
         	 * 
         	 * if 'way' element parse id and get nested 'nd' elements and 'tag' elements. 
         	 * 
-        	 */
-            
-            switch(ELEMENT_NAME)
-            {
-            case "node":
-                for (int i = 0; i < nList.getLength(); i++) 
-                { 
-                    Node nNode = nList.item(i);
-     
-                    if (nNode.getNodeType() == Node.ELEMENT_NODE) 
-                    { 
-                        Element eElement = (Element) nNode;
-     
-                        String id = eElement.getAttribute("id");
+        	 */            
 
-                        String lat = eElement.getAttribute("lat");
-                        String lon = eElement.getAttribute("lon");
-                        
-                        StringBuilder sb = new StringBuilder(id);                    
-                        sb.append(",");
-                        sb.append(lat);
-                        sb.append(",");
-                        sb.append(lon);
-                        
-                        NodeList tagsList_1 = eElement.getElementsByTagName("tag");  //.item(0).getTextContent();
-                      
-                        sb.append(",[");
-                        
-                        
-                        
-                        //iterate node tags
-                        int tagsList_1_length = tagsList_1.getLength(); 
-                        for (int j = 0; j < tagsList_1_length; j++) 
-                        { 
-                        	Node tagNode = tagsList_1.item(j);                        
-                        	Element tagElement = (Element) tagNode;
-                        	String k = tagElement.getAttribute("k");
-                        	String v = tagElement.getAttribute("v");
-                        	sb.append(k);
-                        	sb.append("|");
-                        	sb.append(v);
-                        	if(j + 1 != tagsList_1_length)
-                        	{
-                        		sb.append("|");
-                        	}                        	
-                        }
-                        sb.append("]"); 
-                        context.write(new Text(sb.toString()), NullWritable.get()); 
+            for (int i = 0; i < nList.getLength(); i++) 
+            { 
+                Node nNode = nList.item(i);
+ 
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) 
+                { 
+                    Element eElement = (Element) nNode;
+ 
+                    String id = eElement.getAttribute("id");
+
+                    String lat = eElement.getAttribute("lat");
+                    String lon = eElement.getAttribute("lon");
+                    
+                    StringBuilder sb = new StringBuilder(id);                    
+                    sb.append(",");
+                    sb.append(lat);
+                    sb.append(",");
+                    sb.append(lon);
+                    
+                    NodeList tagsList_1 = eElement.getElementsByTagName("tag");  //.item(0).getTextContent();                      
+                    sb.append(",[");
+                    
+                    //iterate node tags
+                    int tagsList_1_length = tagsList_1.getLength(); 
+                    for (int j = 0; j < tagsList_1_length; j++) 
+                    { 
+                    	Node tagNode = tagsList_1.item(j);                        
+                    	Element tagElement = (Element) tagNode;
+                    	String k = tagElement.getAttribute("k");
+                    	String v = tagElement.getAttribute("v");
+                    	sb.append(k);
+                    	sb.append("|");
+                    	sb.append(v);
+                    	if(j + 1 != tagsList_1_length)
+                    	{
+                    		sb.append("|");
+                    	}                        	
                     }
+                    sb.append("]"); 
+                    context.write(new Text(sb.toString()), NullWritable.get()); 
                 }
-            	break;
-            case "way":
-            	
-            	break;
-            default:
-            	break;
-            }
+            }            
         } 
         catch (Exception e) 
         {

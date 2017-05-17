@@ -20,12 +20,25 @@ public class XMLDriver {
  
             Configuration conf = new Configuration();
             String[] arg = new GenericOptionsParser(conf, args).getRemainingArgs();
+            
+            String elementNameToParse =  args[2];
  
-            conf.set("elementName", args[2]);
+            conf.set("elementName", elementNameToParse);
             
             Job job = Job.getInstance(conf,"XML Processing");
             job.setJarByClass(XMLDriver.class);
-            job.setMapperClass(MyMapper.class);
+            
+            switch(elementNameToParse)
+            {
+	            case "node":
+	            	job.setMapperClass(NodeMapper.class);
+	            	break;
+	            case "way":
+	            	job.setMapperClass(WayMapper.class);
+	            	break;
+	        	default:
+	        		break;            	
+            }
  
             job.setNumReduceTasks(0); 
             job.setInputFormatClass(XmlInputFormat.class);
